@@ -1,4 +1,4 @@
-# Mi presupuesto - proyecto del APK (Android)
+# Balance Local - proyecto del APK (Android)
 
 La app está en `www/index.html`. Este proyecto la empaqueta con Capacitor
 y GitHub compila el APK en la nube, sin instalar nada en tu computador.
@@ -13,7 +13,7 @@ y GitHub compila el APK en la nube, sin instalar nada en tu computador.
 3. Entra a la pestaña **Actions**, elige **Compilar APK** y pulsa **Run workflow**.
    Tarda unos 5 a 8 minutos.
 4. Cuando termine en verde, abre esa ejecución y descarga el archivo
-   **MiPresupuesto-apk** (sección Artifacts). Es un zip que contiene `app-debug.apk`.
+   **BalanceLocal-apk** (sección Artifacts). Es un zip que contiene `BalanceLocal.apk`.
 5. Pasa el APK a tu teléfono, ábrelo y permite "instalar apps de origen desconocido"
    cuando Android lo pida.
 
@@ -23,4 +23,5 @@ y GitHub compila el APK en la nube, sin instalar nada en tu computador.
   GitHub genera un APK nuevo. Instalarlo encima conserva tus datos.
 - El APK es de depuración (firmado con clave de prueba): sirve para uso personal.
   Para publicarlo en Google Play hay que firmarlo con tu propia clave.
-- El ícono es el de Capacitor por defecto; se puede cambiar después.
+- El ícono es tu logo. Para cambiarlo: pon una imagen de 1024x1024 en `assets/icon-only.png` y ejecuta `npx @capacitor/assets generate --android`.
+- Para cambiar el nombre: `capacitor.config.json` (appName) y `android/app/src/main/res/values/strings.xml` (app_name y title_activity_main).
