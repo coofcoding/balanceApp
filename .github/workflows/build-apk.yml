@@ -21,8 +21,8 @@ jobs:
       - run: chmod +x android/gradlew
       - run: ./gradlew assembleDebug
         working-directory: android
-      - run: cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/BalanceLocal.apk
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/Kontrola.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: BalanceLocal-apk
-          path: android/app/build/outputs/apk/debug/BalanceLocal.apk
+          name: Kontrola-apk
+          path: android/app/build/outputs/apk/debug/Kontrola.apk
