@@ -301,7 +301,8 @@ nav button.t.on span{opacity:1;transform:none}
 nav .bar{padding:8px 3px}
 nav button.t{padding:6px 0}
 
-.wcw{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;z-index:1}
+.wcw{position:absolute;inset:0;display:flex;overflow-y:auto;padding:24px;z-index:1}
+.wcw>.wcn{margin:auto}
 .wcw.out{animation:wout .26s ease forwards;pointer-events:none}
 @keyframes wout{to{opacity:0;transform:translateY(-10px)}}
 .wcn>.lgs{animation:none}
@@ -323,6 +324,15 @@ nav button.t{padding:6px 0}
 .sw.off i:after{transform:none}
 .gl{margin:12px 0 6px}
 .gl2{display:block;text-align:center;margin-bottom:4px}
+.note{display:block;margin:-2px 0 10px;font-size:12px;color:var(--mu);line-height:1.45;text-align:left}
+.tk{text-align:center;letter-spacing:.06em;font-weight:600}
+.bi{position:absolute;top:10%;right:10%;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--inbg);border:1px solid var(--bd2);color:var(--mu);font:italic 700 16px/1 Georgia,"Times New Roman",serif;z-index:3}
+.itx{line-height:1.55;margin:12px 0 0;font-size:14.5px}
+.src{display:block;padding:12px 14px;border-radius:14px;background:var(--inbg);margin-top:8px;text-decoration:none;color:var(--tx)}
+.src b{display:block;font-size:14px;line-height:1.35;color:var(--pr)}
+.src small{display:block;margin-top:2px}
+.wcw::-webkit-scrollbar{display:none}
+.rings.r2{grid-template-columns:repeat(2,1fr)}
 </style>
 </head>
 <body>
@@ -401,7 +411,7 @@ const tot=l=>{const ing=sum(l,x=>x.t==="ing"),aho=sum(l,x=>x.t==="aho"),es=sum(l
 const srt=(a,b)=>b.d.localeCompare(a.d)||b.id.localeCompare(a.id);
 const fd=d=>+d.slice(8)+" "+MN[+d.slice(5,7)-1];
 const opt=(v,l,c)=>`<option value="${v}"${v===c?" selected":""}>${l}</option>`;
-const empty=`<div class="empty">Aún no hay movimientos.<br><button class="lnk" onclick="demo()">Cargar datos de ejemplo</button></div>`;
+const empty=`<div class="empty">Aún no hay movimientos.<br><button class="lnk" onclick="openAdd()">Registra tu primer movimiento</button></div>`;
 const empty0=`<div class="empty">Sin movimientos en este periodo.</div>`;
 
 const pbar=()=>`<div class="seg" style="margin:6px 0 10px">${[["m","Mes"],["y","Año"],["a","Todo"]].map(([k,l])=>`<button class="${S.mode===k?"on":""}" onclick="S.mode='${k}';go()">${l}</button>`).join("")}</div>`+(S.mode==="m"?`<button class="in dtb" onclick="calOpen('P','m','${S.ym}')">${MF[+S.ym.slice(5)-1]} ${S.ym.slice(0,4)}</button>`:S.mode==="y"?`<input class="in" type="number" min="2000" max="2100" value="${S.y}" onchange="S.y=+this.value||S.y;go()">`:"");
@@ -543,7 +553,7 @@ $("#sh").innerHTML=`<div class="bk${z}" onclick="shut()"></div><div class="g pan
 ${USR?"":`<button class="save gl" onclick="goLogin()">Iniciar sesión</button><small class="gl2">Tus datos se guardan solo en este dispositivo.</small>`}<label>Tema</label>${thSeg()}<label>Moneda</label>${curDD()}<label>Idioma</label>${lgDD()}
 <button class="more" onclick="stp()"><span>Más opciones</span><i></i></button></div>`;$("#sh").classList.add("on")};
 const stp=()=>{shut();$("#st").classList.add("on");stR()};
-const stX=()=>$("#st").classList.remove("on");
+const stX=()=>{$("#st").classList.remove("on");$("#st").innerHTML=""};
 const stR=()=>{const sec=(t,b)=>`<h2>${t}</h2><div class="g pad stc">${b}</div>`;
 $("#st").innerHTML=`<div class="dtp"><div class="dtt"><button class="x back" onclick="stX()">‹ Volver</button></div><h1 class="sth">Más opciones</h1>
 ${sec("Apariencia",`<label>Tema</label>${thSeg()}<label>Color de la interfaz</label>${swH()}<label class="sw"><span>Animaciones</span><input type="checkbox" ${CFG.an?"checked":""} onchange="cfg('an',this.checked)"><i></i></label>`)}
@@ -570,17 +580,20 @@ if(old){old.querySelectorAll("[id]").forEach(e=>e.removeAttribute("id"));if(stil
 const n=document.createElement("div");n.className="wcw";n.innerHTML=`<div class="wcn" id="wcn"><div class="lgs${m==="w"?"":" sm"}"></div>${b}</div>`;w.appendChild(n);
 WLC=n;placeLogo(!!old);if(!old)requestAnimationFrame(()=>g.classList.add("on"));
 if(window.trAll)trAll();
-const f=m==="u"?n.querySelector(".pins input"):n.querySelector("#aun");if(f)try{f.focus({preventScroll:true})}catch(e){}};
+n.addEventListener("scroll",()=>placeLogo(false),{passive:true});const f=m==="u"?n.querySelector(".pins input"):m==="k"?n.querySelector("#atk"):n.querySelector("#aun");if(f)try{f.focus({preventScroll:true})}catch(e){}};
 window.addEventListener("resize",()=>{if($("#wl").classList.contains("on"))placeLogo(false)});
 const wl=m=>{const u=URS()[USR];let b;
-if(m==="w")b=`<h1>Kontrola</h1><p>Maneja tus finanzas de una forma más práctica</p><button class="save" onclick="wl('l')">Iniciar sesión</button><div class="alt2"><small>¿No tienes cuenta aún?</small> <button class="lnk" onclick="wl('r')">Regístrate</button></div><button class="gst" onclick="gWarn()">Continuar sin iniciar sesión</button>`;
+if(m==="w")b=`<h1>Kontrola</h1><p>Maneja tus finanzas de una forma más práctica</p><button class="save" onclick="wl('l')">Iniciar sesión</button><div class="alt2"><small>¿No tienes cuenta aún?</small> <button class="lnk" onclick="wl('r')">Regístrate</button></div>`;
 else if(m==="u")b=`<h1>Hola, ${esc(u?u.n:"")}</h1><p>Ingresa tu PIN para continuar</p>${pinH("apin",1)}<small class="neg err" id="ae"></small><button class="save" onclick="aUnlock()">Entrar</button><div class="alt2"><button class="lnk" onclick="logout()">No soy yo</button></div>`;
-else b=`<h1>${m==="l"?"Iniciar sesión":"Crear cuenta"}</h1><p>${m==="l"?"Bienvenido de nuevo":"Solo necesitas un nombre de usuario y un PIN de 4 dígitos"}</p><input id="aun" class="in" placeholder="Nombre de usuario" autocomplete="off" autocapitalize="none" maxlength="20"><label class="pl">${m==="l"?"PIN":"PIN de 4 dígitos"}</label>${pinH("apin")}<small class="neg err" id="ae"></small><button class="save" onclick="${m==="l"?"aLogin()":"aReg()"}">${m==="l"?"Entrar":"Crear cuenta"}</button><div class="alt2"><button class="lnk" onclick="wl('w')">‹ Volver</button></div>`;
+else if(m==="k")b=`<h1>Activa tu cuenta</h1><p>Tu cuenta necesita un token de acceso para continuar.</p><label class="pl">Token de acceso (16 caracteres)</label><input id="atk" class="in tk" placeholder="Token de un solo uso" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="16"><small class="neg err" id="ae"></small><button class="save" onclick="aActivate()">Activar</button><div class="alt2"><button class="lnk" onclick="aCancelAct()">‹ Cancelar</button></div>`;
+else b=`<h1>${m==="l"?"Iniciar sesión":"Crear cuenta"}</h1><p>${m==="l"?"Bienvenido de nuevo":"Necesitas un nombre de usuario, un PIN de 4 dígitos y tu token de acceso"}</p><input id="aun" class="in" placeholder="Nombre de usuario" autocomplete="off" autocapitalize="none" maxlength="20">${m==="r"?`<small class="note">El nombre de usuario es el identificador único de tu cuenta y no se puede modificar.</small>`:""}<label class="pl">${m==="l"?"PIN":"PIN de 4 dígitos"}</label>${pinH("apin")}${m==="r"?`<label class="pl">Token de acceso (16 caracteres)</label><input id="atk" class="in tk" placeholder="Token de un solo uso" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="16"><small class="note">Pídelo al administrador. Al registrarte se guardan la fecha, la hora y la ubicación aproximada del registro.</small>`:""}<small class="neg err" id="ae"></small><button class="save" onclick="${m==="l"?"aLogin()":"aReg()"}">${m==="l"?"Entrar":"Crear cuenta"}</button><div class="alt2"><button class="lnk" onclick="wl('w')">‹ Volver</button></div>`;
 wlShow(b,m)};
-const aReg=async()=>{const n=$("#aun").value.trim(),p=pv("apin"),k=n.toLowerCase();
-if(n.length<2)return aErr("El nombre debe tener al menos 2 caracteres.");if(!/^[\p{L}\d _.-]+$/u.test(n))return aErr("Usa solo letras, números, espacios, punto, guion o guion bajo.");if(!/^\d{4}$/.test(p))return aErr("El PIN debe tener exactamente 4 dígitos.");
+const aReg=async()=>{const n=$("#aun").value.trim(),p=pv("apin"),k=n.toLowerCase(),tk=($("#atk")||{value:""}).value.trim();
+if(n.length<2)return aErr("El nombre debe tener al menos 2 caracteres.");if(!/^[\p{L}\d _.-]+$/u.test(n))return aErr("Usa solo letras, números, espacios, punto, guion o guion bajo.");if(!/^\d{4}$/.test(p))return aErr("El PIN debe tener exactamente 4 dígitos.");if(fbOn()&&!TKRE.test(tk))return aErr("El token debe tener 16 caracteres (letras y números).");
 const us=URS();if(us[k])return aErr("Ese nombre de usuario ya existe.");
-if(fbOn()){if(!navigator.onLine)return aErr("Sin conexión. Inténtalo de nuevo.");try{const c=await FA.createUserWithEmailAndPassword(mail(k),fpw(p));try{await c.user.updateProfile({displayName:n})}catch(x){}}catch(e){return aErr(e.code==="auth/email-already-in-use"?"Ese nombre de usuario ya existe.":e.code==="auth/network-request-failed"?"Sin conexión. Inténtalo de nuevo.":"No se pudo crear la cuenta en la nube.")}}
+if(fbOn()){if(!navigator.onLine)return aErr("Sin conexión. Inténtalo de nuevo.");let cu;try{cu=(await FA.createUserWithEmailAndPassword(mail(k),fpw(p))).user}catch(e){return aErr(e.code==="auth/email-already-in-use"?"Ese nombre de usuario ya existe.":e.code==="auth/network-request-failed"?"Sin conexión. Inténtalo de nuevo.":"No se pudo crear la cuenta en la nube.")}
+try{await redeem(tk,cu,n)}catch(e){try{await cu.delete()}catch(x){try{await FA.signOut()}catch(y){}}return aErr(tkErr(e))}
+try{await cu.updateProfile({displayName:n})}catch(x){}}
 const first=!Object.keys(us).length;us[k]={n,h:await hp(k,p)};
 try{["presu_v1","presu_debts","presu_wishes","presu_loans","presu_cat","presu_cfg","presu_ts"].forEach(x=>{const v=localStorage.getItem(x);if(v!==null){localStorage.setItem("u:"+k+":"+x,v);localStorage.removeItem(x)}});localStorage.setItem("bl_users",JSON.stringify(us));localStorage.setItem("bl_session",k);localStorage.removeItem("bl_guest")}catch(e){return aErr("No se pudo guardar la cuenta.")}
 try{sessionStorage.setItem("bl_unl","1")}catch(e){}RL()};
@@ -623,7 +636,7 @@ rf()};
 const syncSoon=()=>{clearTimeout(STM);STM=setTimeout(flush,1500)};
 const flush=async()=>{if(!fbOn()||!USR||!FA.currentUser||!navigator.onLine||!DIRTY.size)return;try{for(const k of[...DIRTY])await push(k);SYNC.s="ok";SYNC.t=Date.now();SYNC.m=""}catch(e){SYNC.s="err";SYNC.m=e.code||e.message||""}rf()};
 const syncH=()=>{if(!fbOn())return`<small>La sincronización en la nube solo está disponible en la app instalada (APK).</small>`;
-const m={off:"Sin iniciar",busy:"Sincronizando…",ok:"Sincronizado",err:"Error de sincronización",offline:"Sin conexión",auth:"Inicia sesión para sincronizar"}[SYNC.s]||"Sin iniciar",d=new Date(SYNC.t),hh=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"),er=SYNC.m==="size"?"Los datos son demasiado grandes para sincronizar.":SYNC.m==="conflict"?"Tu PIN en la nube es distinto: cierra sesión e inicia de nuevo.":SYNC.m;
+const m={off:"Sin iniciar",busy:"Sincronizando…",ok:"Sincronizado",err:"Error de sincronización",offline:"Sin conexión",auth:"Inicia sesión para sincronizar"}[SYNC.s]||"Sin iniciar",d=new Date(SYNC.t),hh=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"),er=SYNC.m==="size"?"Los datos son demasiado grandes para sincronizar.":SYNC.m==="conflict"?"Tu PIN en la nube es distinto: cierra sesión e inicia de nuevo.":SYNC.m==="permission-denied"?"Tu cuenta no tiene licencia activa. Cierra sesión y actívala con un token.":SYNC.m;
 return`<div class="row"><span class="ico">☁️</span><div class="mid"><b>${m}</b><small>${er||(SYNC.t?"Última vez: "+hh:"")}</small></div></div><button class="chip" style="margin-top:12px" onclick="sync()">Sincronizar ahora</button>`};
 const logout=async()=>{try{if(fbOn())await FA.signOut()}catch(e){}unlisten();try{localStorage.removeItem("bl_session");sessionStorage.removeItem("bl_unl")}catch(e){}RL()};
 const pinSave=async()=>{const u=URS(),r=u[USR],old=pv("cpin"),n=pv("npin");if(!r||await hp(USR,old)!==r.h)return fail("El PIN actual no es correcto.");if(!/^\d{4}$/.test(n))return fail("El nuevo PIN debe tener 4 dígitos.");
@@ -634,13 +647,14 @@ if(fbOn()){if(!navigator.onLine)return fail("Necesitas conexión para eliminar t
 const px="u:"+USR+":";try{Object.keys(localStorage).filter(k=>k.startsWith(px)).forEach(k=>localStorage.removeItem(k));const us=URS();delete us[USR];localStorage.setItem("bl_users",JSON.stringify(us));localStorage.removeItem("bl_session");sessionStorage.removeItem("bl_unl");indexedDB.deleteDatabase("presu:"+USR)}catch(e){}RL()};
 const aLogin=async()=>{const k=$("#aun").value.trim().toLowerCase(),p=pv("apin"),u0=URS()[k];if(!k||p.length<4)return aErr("Usuario o PIN incorrectos.");
 let ok=false,name=(u0&&u0.n)||k;
-if(fbOn()&&navigator.onLine){try{const c=await FA.signInWithEmailAndPassword(mail(k),fpw(p));ok=true;name=c.user.displayName||name}
+if(fbOn()&&navigator.onLine){try{const c=await FA.signInWithEmailAndPassword(mail(k),fpw(p));ok=true;name=c.user.displayName||name;let lic=true;try{lic=(await FS.doc("licenses/"+c.user.uid).get()).exists}catch(e2){lic=e2.code!=="permission-denied"}
+if(!lic){PEND={k,p,name};wl("k");return}}
 catch(e){if(e.code==="auth/network-request-failed")ok=!!u0&&await hp(k,p)===u0.h;
-else if(e.code==="auth/user-not-found"||e.code==="auth/invalid-credential"||e.code==="auth/wrong-password"){if(u0&&await hp(k,p)===u0.h){ok=true;try{const c=await FA.createUserWithEmailAndPassword(mail(k),fpw(p));await c.user.updateProfile({displayName:name})}catch(e2){}}}
+else if(e.code==="auth/user-not-found"||e.code==="auth/invalid-credential"||e.code==="auth/wrong-password"){if(u0&&await hp(k,p)===u0.h){try{await FA.createUserWithEmailAndPassword(mail(k),fpw(p));PEND={k,p,name};wl("k");return}catch(e2){ok=true}}}
 else return aErr("No se pudo iniciar sesión. Inténtalo de nuevo.")}}
 else ok=!!u0&&await hp(k,p)===u0.h;
 if(!ok)return aErr("Usuario o PIN incorrectos.");
-const us=URS();us[k]={n:name,h:await hp(k,p)};try{localStorage.setItem("bl_users",JSON.stringify(us));localStorage.setItem("bl_session",k);localStorage.removeItem("bl_guest");sessionStorage.setItem("bl_unl","1")}catch(e){}RL()};
+await finishLogin(k,p,name)};
 const aUnlock=async()=>{const u=URS()[USR],p=pv("apin");if(u&&await hp(USR,p)===u.h){SPIN=p;$("#wl").classList.remove("on");try{sessionStorage.setItem("bl_unl","1")}catch(e){}sync()}else{aErr("PIN incorrecto.");pcl("apin")}};
 const GST=(()=>{try{return localStorage.getItem("bl_guest")==="1"}catch(e){return false}})();
 const gWarn=()=>{$("#gw").innerHTML=`<div class="bk" onclick="gShut()"></div><div class="g pan"><div class="ph"><b>Sin cuenta vinculada</b><button onclick="gShut()" aria-label="Cerrar">✕</button></div><p class="gtx">Al no vincular una cuenta, tus datos se guardarán solo de forma local en este dispositivo y se perderán si eliminas la aplicación.</p><button class="save" onclick="gGo()">Continuar</button><button class="x gb" onclick="gShut()">Volver</button></div>`;$("#gw").classList.add("on");if(window.trAll)trAll()};
@@ -648,6 +662,34 @@ const gShut=()=>$("#gw").classList.remove("on");
 const gGo=()=>{try{localStorage.setItem("bl_guest","1")}catch(e){}gShut();const w=$("#wl");w.classList.add("leave");setTimeout(()=>w.classList.remove("on","leave"),320)};
 const goLogin=()=>{try{localStorage.removeItem("bl_guest");sessionStorage.setItem("bl_goto","l")}catch(e){}RL()};
 const guestSync=()=>`<label class="sw off"><span>Sincronizar datos</span><input type="checkbox" disabled><i></i></label><small>Para usar esta opción, es necesario iniciar sesión.</small>`;
+let PEND=null;
+const getPlace=async()=>{try{const c=new AbortController(),t=setTimeout(()=>c.abort(),4000);const r=await fetch("https://ipwho.is/",{signal:c.signal});clearTimeout(t);const j=await r.json();if(j&&j.success!==false){const p=[j.city,j.region,j.country].filter(Boolean).join(", ");if(p)return p}}catch(e){}try{return Intl.DateTimeFormat().resolvedOptions().timeZone||"Desconocido"}catch(e){return"Desconocido"}};
+const getDevice=()=>{const ua=navigator.userAgent||"",m=ua.match(/Android [\d.]+; ([^;)]+)/);return((m?m[1].trim():(navigator.platform||"Dispositivo"))+" · "+(navigator.language||"")).slice(0,80)};
+const redeem=async(tk,u,name)=>{const ref=FS.doc("tokens/"+tk);let s;try{s=await ref.get()}catch(e){throw{code:e.code==="permission-denied"?"invalid":"net"}}
+if(!s.exists)throw{code:"invalid"};if(s.data().used)throw{code:"used"};
+const place=await getPlace(),ts=firebase.firestore.FieldValue.serverTimestamp(),b=FS.batch();
+b.update(ref,{used:true,usedBy:u.uid,usedName:name,usedAt:ts,place,device:getDevice()});b.set(FS.doc("licenses/"+u.uid),{token:tk,ts});
+try{await b.commit()}catch(e){throw{code:e.code==="permission-denied"?"used":"net"}}};
+const tkErr=e=>e.code==="used"?"Este token ya fue utilizado. Contacta al administrador.":e.code==="invalid"?"Token no válido.":"No se pudo verificar el token. Revisa tu conexión.";
+const TKRE=/^[A-Za-z0-9]{16}$/;
+const finishLogin=async(k,p,name)=>{const us=URS();us[k]={n:name,h:await hp(k,p)};try{localStorage.setItem("bl_users",JSON.stringify(us));localStorage.setItem("bl_session",k);localStorage.removeItem("bl_guest");sessionStorage.setItem("bl_unl","1")}catch(e){}RL()};
+const aActivate=async()=>{const tk=$("#atk").value.trim();if(!TKRE.test(tk))return aErr("El token debe tener 16 caracteres (letras y números).");
+try{await redeem(tk,FA.currentUser,PEND.name)}catch(e){return aErr(tkErr(e))}
+const{k,p,name}=PEND;PEND=null;await finishLogin(k,p,name)};
+const aCancelAct=async()=>{try{await FA.signOut()}catch(e){}PEND=null;wl("l")};
+const infoDti=()=>{const L2=(h,t,d)=>`<a class="src" href="${h}" target="_blank" rel="noopener noreferrer"><b>${t}</b><small>${d}</small></a>`;
+$("#sh").innerHTML=`<div class="bk" onclick="shut()"></div><div class="g pan">${ph("¿Por qué el 30%?")}
+<p class="itx">Este círculo compara lo que pagas cada mes en cuotas de deudas con tus ingresos del mes. En finanzas se llama relación deuda-ingreso.</p>
+<p class="itx">El 30% es una regla práctica y conservadora. En Colombia se usa mucho como referencia: por ley, la primera cuota de un crédito hipotecario no puede superar el 30% de los ingresos familiares. Con ese margen te quedan ingresos para los gastos básicos, el ahorro y los imprevistos.</p>
+<p class="itx">No es una ley universal. Algunas entidades consideran sano llegar hasta cerca del 40%, y en Estados Unidos las guías hablan de 36% a 43%. Por eso Kontrola usa un límite prudente: por debajo de 28% es Seguro, de 28% a 31% es Estable y por encima de 31% es Alerta.</p>
+<h2>Fuentes</h2>
+${L2("https://www.portafolio.co/mis-finanzas/las-cinco-alertas-que-le-pueden-indicar-si-usted-esta-sobrendeudado-532524","Las cinco alertas que le pueden indicar si usted está sobreendeudado","Portafolio · portafolio.co")}
+${L2("https://www.lafm.com.co/economia/colombianos-gastan-un-30-de-sus-ingresos-en-pagar-deudas-asobancaria","Colombianos gastan un 30 % de sus ingresos en pagar deudas: Asobancaria","La FM · lafm.com.co")}
+${L2("https://www.lafm.com.co/economia/cupos-de-endeudamiento-que-son-y-como-se-establecen","Cupos de endeudamiento: ¿qué son y cómo se establecen?","La FM · lafm.com.co")}
+${L2("https://www.bancolombia.com/educacion-financiera/finanzas-personales/buen-uso-de-credito","¿Cómo hacer buen uso de un crédito?","Bancolombia · bancolombia.com")}
+${L2("https://www.elpais.com.co/economia/que-las-deudas-no-le-quiten-la-tranquilidad-consejos-de-un-experto-para-no-sobreendeudarse-1605.html","Que las deudas no le quiten la tranquilidad: consejos para no sobreendeudarse","El País Cali · elpais.com.co")}
+${L2("https://www.consumerfinance.gov/ask-cfpb/what-is-a-debt-to-income-ratio-why-is-the-43-debt-to-income-ratio-important-en-1791/","What is a debt-to-income ratio?","Consumer Financial Protection Bureau · consumerfinance.gov")}
+<small class="note" style="margin-top:14px">Úsalo como guía, no como asesoría financiera: con ingresos variables o muchos gastos fijos, lo ideal puede ser un porcentaje menor.</small></div>`;$("#sh").classList.add("on");if(window.trAll)trAll()};
 const CP0={};let CP;
 const h2r=(h,s,v)=>{const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1))};return[f(5),f(3),f(1)].map(x=>Math.round(x*255))};
 const rgbx=(r,g,b)=>"#"+[r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("");
@@ -699,9 +741,9 @@ const catIco=(k,n)=>{const a=(CAT[k]||[]).find(x=>x[0]===n)||Object.values(CAT).
 const gcats=g=>g?CAT[g]:[...new Map([...CAT.esencial,...CAT.gusto,...CAT.aho].map(a=>[a[0],a])).values()];
 const rs=()=>rf();
 const DDS={};
-const dd=(id,items,cur,set)=>{DDS[id]={items,set,cur};const c=items.find(i=>i[0]===cur)||items[0];return `<button class="in dd" id="dd_${id}" onclick="ddOpen('${id}')"><span>${c[2]?c[2]+" ":""}${esc(c[1])}</span><i></i></button>`};
+const dd=(id,items,cur,set)=>{DDS[id]={items,set,cur};const c=items.find(i=>i[0]===cur)||items[0];return `<button class="in dd" id="dd_${id}" onclick="ddOpen('${id}',this)"><span>${c[2]?c[2]+" ":""}${esc(c[1])}</span><i></i></button>`};
 const ddShut=()=>{const m=$("#ddm");if(m)m.remove()};
-const ddOpen=id=>{ddShut();const b=$("#dd_"+id),r=b.getBoundingClientRect(),f=DDS[id],h=Math.min(f.items.length*46+12,300),up=r.bottom+h+12>innerHeight&&r.top>h,m=document.createElement("div");m.id="ddm";
+const ddOpen=(id,el)=>{ddShut();const b=el||$("#dd_"+id),r=b.getBoundingClientRect(),f=DDS[id],h=Math.min(f.items.length*46+12,300),up=r.bottom+h+12>innerHeight&&r.top>h,m=document.createElement("div");m.id="ddm";
 m.innerHTML=`<div class="ddb" onclick="ddShut()"></div><div class="g ddl" style="left:${r.left}px;width:${r.width}px;max-height:${h}px;${up?`bottom:${innerHeight-r.top+6}px;transform-origin:bottom`:`top:${r.bottom+6}px`}">${f.items.map((x,i)=>`<button class="opt${x[0]===f.cur?" on":""}" onclick="ddPick('${id}',${i})">${x[2]?`<span>${x[2]}</span>`:""}<b>${esc(x[1])}</b></button>`).join("")}</div>`;document.body.appendChild(m)};
 const ddPick=(id,i)=>{const f=DDS[id];ddShut();f.set(f.items[i][0])};
 let CM={g:"esencial",ng:"esencial",e:"🛒",n:""};
@@ -724,7 +766,7 @@ const addCat=()=>catAdd();
 const msum=d=>d.p.filter(x=>x.d.slice(0,7)===cm()).reduce((a,x)=>a+x.v,0);
 const dstat=d=>{const m=msum(d);return m>=cuota(d)-.5||(sal(d)<1&&m>0)?"ok":m>0?"par":"pen"};
 const bigRing=()=>{const ac=dact(),mc=ac.reduce((a,d)=>a+cuota(d),0),im=inm(),p=im?mc/im*100:null,st=p==null?["Sin ingresos","var(--mu)"]:p>31?["Alerta","var(--bad)"]:p>=28?["Estable","var(--warn)"]:["Seguro","var(--ok)"];
-return `<div class="g bigr"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:var(--trk)"/><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:${st[1]}" stroke-dasharray="${Math.min(1,(p||0)/60)*276.46} 276.46"/></svg><div class="c"><small>Deudas sobre ingresos</small><b>${p==null?"—":p.toFixed(1).replace(".",",")+"%"}</b><span class="stt" style="color:${st[1]}">${st[0]}</span><small>Límite sano: 30%</small></div></div><small class="cap">Cuotas ${fmt(mc)} · Ingresos de ${mlab()} ${fmt(im)}</small>`};
+return `<div class="g bigr"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:var(--trk)"/><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:${st[1]}" stroke-dasharray="${Math.min(1,(p||0)/60)*276.46} 276.46"/></svg><div class="c"><small>Deudas sobre ingresos</small><b>${p==null?"—":p.toFixed(1).replace(".",",")+"%"}</b><span class="stt" style="color:${st[1]}">${st[0]}</span><small>Límite sano: 30%</small></div><button class="bi" onclick="infoDti()" aria-label="Información">i</button></div><small class="cap">Cuotas ${fmt(mc)} · Ingresos de ${mlab()} ${fmt(im)}</small>`};
 const dsec=()=>{const o=[...dact()].sort((a,b)=>S.so==="nieve"?sal(a)-sal(b):b.r-a.r);if(!o.length)return DB.length?`<h2>Deudas de ${mlab()}</h2><div class="g pad"><div class="empty">No tienes deudas activas en este mes.</div></div>`:"";
 const past=cm()<iso.slice(0,7),st=o.map(dstat),nx=st.findIndex(x=>x!=="ok"),n=st.filter(x=>x==="ok").length;
 return `<h2>Deudas de ${mlab()}</h2><div class="g pad"><div class="cbh"><b>${n} de ${o.length} pagadas</b><small>${nx<0?"Todo al día":"Falta: "+fmt(o.filter((d,i)=>st[i]!=="ok").reduce((a,d)=>a+Math.max(0,cuota(d)-msum(d)),0))}</small></div><div class="trk"><i style="width:${n/o.length*100}%"></i></div>
@@ -738,16 +780,21 @@ for(;;){const k=y+"-"+String(m).padStart(2,"0");if(k>end)break;
 const intr=rd(acc);B+=intr;acc=0;
 const last=k===end?+iso.slice(8):new Date(y,m,0).getDate();let dep=0;
 for(let d=1;d<=last;d++){const ds=k+"-"+String(d).padStart(2,"0");L.forEach(x=>{if(x.d===ds){B+=x.v;dep+=x.v}});acc+=B*dr}
-R[k]={dep,intr,bal:B};ks.push(k);m++;if(m>12){m=1;y++}}
+if(k===end)acc+=B*dr*(new Date(y,m,0).getDate()-last);R[k]={dep,intr,bal:B};ks.push(k);m++;if(m>12){m=1;y++}}
 return{R,ks,pend:rd(acc)}};
+const ahist=(Z,per,yr)=>{const R=Z.R,E=[];D.filter(x=>x.t==="aho"&&inP(x.d)).forEach(x=>E.push({d:x.d,id:x.id,x}));per.forEach(k=>{if(R[k].intr>0)E.push({d:k+"-01",id:"~"+k,it:R[k].intr})});
+E.sort((a,b)=>b.d.localeCompare(a.d)||b.id.localeCompare(a.id));
+if(!E.length)return '<div class="g pad"><div class="empty">Sin ahorros en este periodo.<br>Toca + para guardar uno.</div></div>';
+let o="",c="",b="";const f=()=>{if(b)o+=`<div class="dg"><div class="dh">${dlab(c)}</div><div class="g pad">${b}</div></div>`};
+E.forEach(e=>{if(e.d!==c){f();c=e.d;b=""}b+=e.x?row(e.x,1,1,1):`<div class="row"><span class="ico">📈</span><div class="mid"><b>Rendimiento acreditado</b><small>${yr}% anual</small></div><span class="amt pos">+${fmt(e.it)}</span></div>`});f();return o};
 const vAho=()=>{const Z=sim(),R=Z.R,per=Z.ks.filter(k=>inP(k+"-01")),ek=S.mode==="m"?S.ym:S.mode==="y"?S.y+"-12":"9999-12",
 sd=Z.ks.reduce((b,k)=>k<=ek?R[k].bal:b,0),dep=per.reduce((a,k)=>a+R[k].dep,0),gan=per.reduce((a,k)=>a+R[k].intr,0),M={},yr=String(CFG.yr).replace(".",",");
 D.filter(x=>x.t==="aho"&&inP(x.d)).sort(srt).forEach(x=>{(M[x.d.slice(0,7)]=M[x.d.slice(0,7)]||[]).push(x)});
-const hk=[...new Set([...Object.keys(M),...per.filter(k=>R[k].intr>0)])].sort().reverse(),nx=MF[(now.getMonth()+1)%12];
+const hk=[...new Set([...Object.keys(M),...per.filter(k=>R[k].intr>0)])].sort().reverse(),nx=MF[(now.getMonth()+1)%12],hist=ahist(Z,per,yr);
 return `<div class="g bigr"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:var(--trk)"/><circle cx="50" cy="50" r="44" fill="none" stroke-width="5" style="stroke:var(--pr)" stroke-dasharray="276.46 276.46"/></svg><div class="c"><small>Total ahorrado</small><b class="sm">${fmt(sd)}</b><span class="stt" style="color:var(--ok)">${yr}% anual</span></div></div>
-<small class="cap">${S.mode==="a"?"Saldo actual":"Saldo al cierre de "+(S.mode==="m"?mlab():S.y)}${CFG.yr&&Z.pend&&inP(iso)?" · El 1 de "+nx+" se acreditan +"+fmt(Z.pend):""}${CFG.yr?"":" · Define tu rendimiento en Más opciones › Ahorros"}</small>
-<div class="rings">${ring("Depositado",dep,1,"var(--pr)","")}${ring("Rendimiento",0,Math.min(1,CFG.yr/15),"var(--warn)","",yr+"%")}${ring("Ganado",gan,dep?Math.min(1,gan/dep*4):0,"var(--ok)","pos")}</div>${pbar()}
-<h2>Historial de ahorros</h2>${hk.length?hk.map(k=>{const it=R[k]?R[k].intr:0;return `<div class="g pad" style="margin-bottom:12px"><div class="cbh"><b style="text-transform:capitalize">${MF[+k.slice(5)-1]} ${k.slice(0,4)}</b><b>${fmt(sum(M[k]||[],()=>1)+it)}</b></div>${it>0?`<div class="row"><span class="ico">📈</span><div class="mid"><b>Rendimiento acreditado</b><small>${fd(k+"-01")} · ${yr}% anual</small></div><span class="amt pos">+${fmt(it)}</span></div>`:""}${(M[k]||[]).map(x=>row(x,1,1)).join("")}</div>`}).join(""):'<div class="g pad"><div class="empty">Sin ahorros en este periodo.<br>Toca + para guardar uno.</div></div>'}`};
+<small class="cap">${S.mode==="a"?"Saldo actual":"Saldo al cierre de "+(S.mode==="m"?mlab():S.y)}${CFG.yr&&Z.pend&&inP(iso)?" · El 1 de "+nx+" se acreditan ≈ +"+fmt(Z.pend):""}${CFG.yr?"":" · Define tu rendimiento en Más opciones › Ahorros"}</small>
+<div class="rings r2">${ring("Depositado",dep,1,"var(--pr)","")}${ring("Ganado",gan,dep?Math.min(1,gan/dep*4):0,"var(--ok)","pos")}</div>${pbar()}
+<h2>Historial de ahorros</h2>${hist}`};
 EM.push("💍","🏖️","🏍️","🎧");
 const sv=w=>w.p.reduce((a,x)=>a+x.v,0);
 const wdone=w=>w.v>0&&sv(w)>=w.v-.005;
@@ -831,6 +878,7 @@ Ver todos los movimientos|See all transactions|Vedi tutti i movimenti
 Últimos movimientos|Latest transactions|Ultimi movimenti
 Aún no hay movimientos.|No transactions yet.|Ancora nessun movimento.
 Cargar datos de ejemplo|Load sample data|Carica dati di esempio
+Registra tu primer movimiento|Record your first transaction|Registra il tuo primo movimiento
 Mostrar|Show|Mostra
 Dinero|Money|Denaro
 Gastos|Expenses|Spese
@@ -1125,6 +1173,27 @@ Escribe el aporte de la persona.|Enter the person's share.|Inserisci la quota de
 PIN|PIN|PIN
 Sincronización|Sync|Sincronizzazione
 Continuar sin iniciar sesión|Continue without logging in|Continua senza accedere
+Activa tu cuenta|Activate your account|Attiva il tuo account
+Tu cuenta necesita un token de acceso para continuar.|Your account needs an access token to continue.|Il tuo account richiede un token di accesso per continuare.
+Activar|Activate|Attiva
+‹ Cancelar|‹ Cancel|‹ Annulla
+Token de acceso (16 caracteres)|Access token (16 characters)|Token di accesso (16 caratteri)
+Token de un solo uso|Single-use token|Token monouso
+Pídelo al administrador. Al registrarte se guardan la fecha, la hora y la ubicación aproximada del registro.|Ask the administrator for it. When you sign up, the date, time and approximate location of the registration are saved.|Chiedilo all'amministratore. Quando ti registri vengono salvati data, ora e posizione approssimativa della registrazione.
+El nombre de usuario es el identificador único de tu cuenta y no se puede modificar.|Your username is your account's unique identifier and can't be changed.|Il nome utente è l'identificativo univoco del tuo account e non può essere modificato.
+Necesitas un nombre de usuario, un PIN de 4 dígitos y tu token de acceso|You need a username, a 4-digit PIN and your access token|Ti servono un nome utente, un PIN a 4 cifre e il tuo token di accesso
+El token debe tener 16 caracteres (letras y números).|The token must have 16 characters (letters and numbers).|Il token deve avere 16 caratteri (lettere e numeri).
+Este token ya fue utilizado. Contacta al administrador.|This token has already been used. Contact the administrator.|Questo token è già stato utilizzato. Contatta l'amministratore.
+Token no válido.|Invalid token.|Token non valido.
+No se pudo verificar el token. Revisa tu conexión.|Couldn't verify the token. Check your connection.|Impossibile verificare il token. Controlla la connessione.
+Tu cuenta no tiene licencia activa. Cierra sesión y actívala con un token.|Your account has no active license. Log out and activate it with a token.|Il tuo account non ha una licenza attiva. Esci e attivalo con un token.
+¿Por qué el 30%?|Why 30%?|Perché il 30%?
+Fuentes|Sources|Fonti
+Información|Information|Informazioni
+Este círculo compara lo que pagas cada mes en cuotas de deudas con tus ingresos del mes. En finanzas se llama relación deuda-ingreso.|This circle compares what you pay each month in debt installments with your income for the month. In finance it's called the debt-to-income ratio.|Questo cerchio confronta quanto paghi ogni mese in rate di debiti con le tue entrate del mese. In finanza si chiama rapporto debito/reddito.
+El 30% es una regla práctica y conservadora. En Colombia se usa mucho como referencia: por ley, la primera cuota de un crédito hipotecario no puede superar el 30% de los ingresos familiares. Con ese margen te quedan ingresos para los gastos básicos, el ahorro y los imprevistos.|30% is a practical, conservative rule. In Colombia it's widely used as a reference: by law, the first installment of a mortgage can't exceed 30% of household income. With that margin you keep income for basic expenses, savings and the unexpected.|Il 30% è una regola pratica e prudente. In Colombia è molto usata come riferimento: per legge la prima rata di un mutuo non può superare il 30% del reddito familiare. Con quel margine ti restano risorse per le spese di base, il risparmio e gli imprevisti.
+No es una ley universal. Algunas entidades consideran sano llegar hasta cerca del 40%, y en Estados Unidos las guías hablan de 36% a 43%. Por eso Kontrola usa un límite prudente: por debajo de 28% es Seguro, de 28% a 31% es Estable y por encima de 31% es Alerta.|It's not a universal law. Some institutions consider up to about 40% healthy, and in the United States guidelines mention 36% to 43%. That's why Kontrola uses a prudent limit: below 28% is Safe, 28% to 31% is Stable and above 31% is Alert.|Non è una legge universale. Alcune istituzioni considerano sano arrivare fino a circa il 40% e negli Stati Uniti le linee guida parlano di 36%-43%. Per questo Kontrola usa un limite prudente: sotto il 28% è Sicuro, dal 28% al 31% è Stabile e sopra il 31% è Allerta.
+Úsalo como guía, no como asesoría financiera: con ingresos variables o muchos gastos fijos, lo ideal puede ser un porcentaje menor.|Use it as a guide, not as financial advice: with variable income or many fixed expenses, a lower percentage may be better.|Usalo come guida, non come consulenza finanziaria: con entrate variabili o molte spese fisse, una percentuale più bassa può essere meglio.
 Sin cuenta vinculada|No linked account|Nessun account collegato
 Al no vincular una cuenta, tus datos se guardarán solo de forma local en este dispositivo y se perderán si eliminas la aplicación.|Without a linked account, your data will be stored only locally on this device and will be lost if you delete the app.|Senza un account collegato, i tuoi dati verranno salvati solo localmente su questo dispositivo e andranno persi se elimini l'app.
 Continuar|Continue|Continua
@@ -1261,11 +1330,11 @@ const del=id=>{if(S.dl===id){D=D.filter(x=>x.id!==id);if(id[0]==="g"){DB.forEach
 let A;
 const openAdd=()=>{if(S.tab==="deb")return dform();if(S.tab==="des")return wform();if(S.tab==="pre")return lform();A={t:"gas",g:"esencial",c:CAT.esencial[0][0],v:"",d:iso,n:"",e:0};if(S.tab==="aho"){A.t="aho";A.g="";A.c=CAT.aho[0][0]}sheet()};
 const shut=()=>{S.dl=null;$("#sh").classList.remove("on")};
-const setT=t=>{A.t=t;A.g=t==="gas"?"esencial":"";A.c=CAT[t==="gas"?"esencial":t][0][0];segOn("#st",t);acR()};
+const setT=t=>{A.t=t;A.g=t==="gas"?"esencial":"";A.c=CAT[t==="gas"?"esencial":t][0][0];segOn("#sty",t);acR()};
 const setG=g=>{A.g=g;A.c=CAT[g][0][0];acR()};
 const sheet=()=>{const gr=A.t==="gas",ck=gr?A.g:A.t;
 $("#sh").innerHTML=`<div class="bk" onclick="shut()"></div><div class="g pan">${ph("Nuevo movimiento")}
-<div class="seg" id="st">${[["gas","Gasto"],["ing","Ingreso"],["aho","Ahorro"]].map(([k,l])=>`<button data-k="${k}" class="${A.t===k?"on":""}" onclick="setT('${k}')">${l}</button>`).join("")}</div>
+<div class="seg" id="sty">${[["gas","Gasto"],["ing","Ingreso"],["aho","Ahorro"]].map(([k,l])=>`<button data-k="${k}" class="${A.t===k?"on":""}" onclick="setT('${k}')">${l}</button>`).join("")}</div>
 <label>Valor</label><input class="in" inputmode="decimal" placeholder="$ 0" value="${esc(A.v)}" oninput="mf(this,event);A.v=this.value" >
 <label>Fecha</label><button id="dA" class="in dtb" onclick="calOpen('A','d',A.d)">${fdl(A.d)}</button>
 <div id="ac">${acH()}</div>
@@ -1283,7 +1352,7 @@ const imp=i=>{const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if(!D.length)idb("readonly").then(s=>{try{const a=JSON.parse(s||"[]");if(Array.isArray(a)&&a.length&&!D.length){D=a;save();go()}}catch(e){}});
 lmig();applyCfg();applyLang();$("#phr").textContent=PHN;$("#pnm").textContent=UNAME();
-if(USR&&!URS()[USR]){try{localStorage.removeItem("bl_session")}catch(e){}RL()}else if(!USR){const g=SS("bl_goto");try{sessionStorage.removeItem("bl_goto")}catch(e){}if(!GST)wl(g||"w")}else if(CFG.lock!==false&&!SS("bl_unl"))wl("u");
+if(USR&&!URS()[USR]){try{localStorage.removeItem("bl_session")}catch(e){}RL()}else if(!USR){const g=SS("bl_goto");try{sessionStorage.removeItem("bl_goto")}catch(e){}wl(g||"w")}else if(CFG.lock!==false&&!SS("bl_unl"))wl("u");
 $("#app").classList.add("a");go();setTimeout(()=>$("#app").classList.remove("a"),900);
 fbOn();if(USR&&(CFG.lock===false||SS("bl_unl")))sync();window.addEventListener("online",()=>sync());
 </script>
